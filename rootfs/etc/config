@@ -1,0 +1,2 @@
+BACKUP_DEV=/dev/sda
+BACKUP_FILE=rootfs.img

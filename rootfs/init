@@ -1,0 +1,19 @@
+#!/bin/busybox sh
+
+/bin/busybox --install -s /bin
+
+mkdir -p /proc /sys /dev
+
+# mount important file systems
+mount -t proc     none /proc
+mount -t sysfs    none /sys
+mount -t devtmpfs none /dev
+
+source /etc/config
+
+for step in /run/*.sh; do
+  echo "running $step"
+  ( source $step && main )
+done
+
+sleep 100

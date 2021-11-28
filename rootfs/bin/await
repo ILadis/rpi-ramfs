@@ -1,0 +1,14 @@
+#!/bin/sh
+
+file="$1"
+timeout="$2"
+
+until [ -e "$file" ]; do
+  sleep 1
+  timeout=$((timeout - 1))
+  if [ $timeout -lt 0 ]; then
+    exit 1
+  fi
+done
+
+exit 0

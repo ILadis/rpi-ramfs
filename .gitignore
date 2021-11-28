@@ -1,0 +1,4 @@
+rootfs/bin/busybox
+
+*.tar.*
+*.cpio.*
