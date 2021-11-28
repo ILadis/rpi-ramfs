@@ -11,9 +11,8 @@ mount -t devtmpfs none /dev
 
 source /etc/config
 
-for step in /run/*.sh; do
-  echo "running $step"
-  ( source $step && main )
+for task in /run/*.sh; do
+  /bin/run $task
 done
 
 sleep 100

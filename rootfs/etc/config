@@ -1,2 +1,5 @@
-BACKUP_DEV=/dev/sda
+
+BACKUP_SRCDEV=/dev/sda
+BACKUP_DESTDEV=/dev/sdb1
+
 BACKUP_FILE=rootfs.img

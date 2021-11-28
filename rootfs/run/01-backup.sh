@@ -1,21 +1,17 @@
 
-function check {
-  echo "waiting for target device $BACKUP_DEV"
-  await "$BACKUP_DEV" 10 || exit 1
+function main {
+  await "$BACKUP_SOURCE" 10 \
+    || perror 2 'backup source not available'
 
-  mkdir -p /mnt/target
-  mount "$BACKUP_DEV" /mnt/target
+  await "$BACKUP_TARGET" 10 \
+    || perror 3 'backup target not available'
 
-  BACKUP_DATE=0
+  mkdir -p /mnt
+  mount "$BACKUP_TARGET" /mnt || return 4
 
-  if [ -f "$BACKUP_FILE" ]; then
-    BACKUP_DATE=$(date -r "$BACKUP_FILE" +'%s')
+  if [ ! -e "/mnt/$BACKUP_FILE" ]; then
+    dd if="$BACKUP_SRCDEV" of="/mnt/$BACKUP_FILE"
   fi
 
-  echo "last backup date: $(date --date=@$BACKUP_DATE)"
-}
-
-function main {
-  echo "running main!"
-  check
+  umount /mnt
 }
