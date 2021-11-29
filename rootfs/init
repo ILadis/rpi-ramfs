@@ -2,17 +2,20 @@
 
 /bin/busybox --install -s /bin
 
-mkdir -p /proc /sys /dev
+mkdir -p /proc /sys /dev /mnt
 
-# mount important file systems
+# mount pseudo file systems
 mount -t proc     none /proc
 mount -t sysfs    none /sys
 mount -t devtmpfs none /dev
 
 source /etc/config
 
-for task in /run/*.sh; do
-  /bin/run $task
-done
+# run available tasks
+for task in /run/*.sh; do (
+  source $task && main
+) done
 
-sleep 100
+# switch root and continue init
+mount /dev/mmcblk0p2 /mnt
+exec switch_root /mnt /sbin/init

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+PS1="sh: \${PWD}# "
+TTY='console'
+
+while [ -f /sys/class/tty/$TTY/active ]; do
+  TTY=$(cat /sys/class/tty/$TTY/active)
+  TTY=${TTY##* }
+done
+
+export PS1
+setsid -c /bin/sh -i -l 0<> /dev/$TTY 1<> /dev/$TTY 2<> /dev/$TTY

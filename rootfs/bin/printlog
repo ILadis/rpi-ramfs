@@ -1,6 +1,0 @@
-#!/bin/sh
-
-message="$1"
-date="$(date +'%Y-%m-%d %H:%m:%S')"
-
-echo "[$date] - $message"
