@@ -1,16 +1,18 @@
 
 function main {
   await "$BACKUP_SOURCE" 10 \
-    || perror 2 'backup source not available'
+    || fail 'backup source not available'
 
   await "$BACKUP_TARGET" 10 \
-    || perror 3 'backup target not available'
+    || fail 'backup target not available'
 
   mkdir -p /mnt
   mount "$BACKUP_TARGET" /mnt \
-    || perror 4 'could not mount target device'
+    || fail 'could not mount target device'
 
-  if [ ! -e "/mnt/$BACKUP_FILE" ]; then
+  if [ -e "/mnt/$BACKUP_FILE.renew" ]; then
+    log "starting backup of $BACKUP_SOURCE to $BACKUP_TARGET ($BACKUP_FILE)"
+    rm -f "/mnt/$BACKUP_FILE.renew"
     dd if="$BACKUP_SOURCE" of="/mnt/$BACKUP_FILE"
   fi
 
@@ -21,18 +23,16 @@ function await {
   file="$1"
   timeout="$2"
 
-  until [ -e "$file" ]; do
+  while [ ! -e "$file" ]; do
     sleep 1
     timeout=$((timeout - 1))
     if [ $timeout -lt 0 ]; then
       return 1
     fi
   done
-
-  return 0
 }
 
-function perror {
-  echo $2
-  exit $1
+function fail {
+  log "$1"
+  exit 1
 }

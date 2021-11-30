@@ -1,11 +1,4 @@
 #!/bin/sh
 
-warn() {
-  echo "<28>WARN: $*" > /dev/kmsg
-  echo "WARN: $*" >&2
-}
-
-info() {
-  echo "<30>INFO: $*" > /dev/kmsg
-  echo "INFO: $*" >&2
-}
+echo "<30>$*" > /dev/kmsg
+echo "$*"
