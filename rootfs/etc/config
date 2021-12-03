@@ -1,5 +1,5 @@
 
 BACKUP_SOURCE=/dev/mmcblk0
-BACKUP_TARGET=/dev/sdb1
+BACKUP_TARGET=/dev/sda2
 
 BACKUP_FILE=rootfs.img

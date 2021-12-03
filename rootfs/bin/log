@@ -1,4 +1,0 @@
-#!/bin/sh
-
-echo "<30>$*" > /dev/kmsg
-echo "$*"

@@ -11,8 +11,12 @@ function backup {
   await "$source" 10 \
     || die 'backup source not available'
 
+  echo "backup source $source ready"
+
   await "$target" 10 \
     || die 'backup target not available'
+
+  echo "backup target $target ready"
 
   mkdir -p /mnt
   mount "$target" /mnt \
@@ -21,7 +25,9 @@ function backup {
   if [ -e "/mnt/$file.renew" ]; then
     echo "starting backup of $source to $target ($file)"
     rm -f "/mnt/$file.renew"
-    echo if="$source" of="/mnt/$file"
+    dd if="$source" of="/mnt/$file" bs=4M conv=fsync
+  else
+    echo 'renew flag file does not exist, skipping backup'
   fi
 
   umount /mnt

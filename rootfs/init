@@ -12,13 +12,13 @@ mount -t devtmpfs none /dev
 source /etc/config
 
 # run available tasks
-for task in /run/*.sh; do
-  ( source $task && main ) > log #TODO
-done
+for task in /run/*.sh; do (
+  source $task && main
+) done
 
 # switch root and continue init
 mount /dev/mmcblk0p2 /mnt
 exec switch_root /mnt /sbin/init || {
-  log 'failed to switch root'
+  echo 'failed to switch root'
   shell
 }
