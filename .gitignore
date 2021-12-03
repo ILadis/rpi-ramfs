@@ -1,4 +1,2 @@
 rootfs/bin/busybox
-
-*.tar.*
-*.cpio.*
+initramfs.cpio

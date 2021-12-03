@@ -1,5 +1,21 @@
 #!/bin/bash
 
+function main {
+  case "$1" in
+  pack*)
+    package 'initramfs.cpio'
+    ;;
+  get*)
+    getbusybox "$2"
+    ;;
+  esac
+}
+
+function package (
+  cd rootfs
+  find . -print0 | cpio --null --create --format=newc
+) > "$1"
+
 function getbusybox {
   case "$1" in
   arm)
@@ -8,27 +24,12 @@ function getbusybox {
   aarch)
     curl -L 'http://mirror.archlinuxarm.org/aarch64/community/busybox-1.34.1-1-aarch64.pkg.tar.xz' \
       | tar --extract --xz --strip-components 2 'usr/bin/busybox' ;;
-  x86)
-    curl -L 'https://archlinux.org/packages/community/x86_64/busybox/download' \
-      | tar --extract --zstd --strip-components 2 'usr/bin/busybox' ;;
   esac
 }
 
-function package {
-  ( cd rootfs
-    find . -print0 | cpio --null --create --format=newc
-  ) > "$1"
-}
-
-function main {
-  case "$1" in
-  package)
-    package 'initramfs.cpio'
-    ;;
-  *)
-    echo 'unknown target'
-    ;;
-  esac
-}
+function package (
+  cd rootfs
+  find . -print0 | cpio --null --create --format=newc
+) > "$1"
 
 main "$@"

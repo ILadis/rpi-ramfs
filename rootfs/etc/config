@@ -1,5 +1,9 @@
 
+# source device of backup
 BACKUP_SOURCE=/dev/mmcblk0
+
+# destination device of backup
 BACKUP_TARGET=/dev/sda2
 
+# name of backup output file
 BACKUP_FILE=rootfs.img

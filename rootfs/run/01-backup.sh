@@ -1,20 +1,16 @@
 
 function main {
-  backup "$BACKUP_SOURCE" "$BACKUP_TARGET" "$BACKUP_FILE"
-}
-
-function backup {
-  local source="$1"
-  local target="$2"
-  local file="$3"
+  local source="$BACKUP_SOURCE"
+  local target="$BACKUP_TARGET"
+  local file="$BACKUP_FILE"
 
   await "$source" 10 \
-    || die 'backup source not available'
+    || die "backup source ($source) not available"
 
   echo "backup source $source ready"
 
   await "$target" 10 \
-    || die 'backup target not available'
+    || die "backup target ($target) not available"
 
   echo "backup target $target ready"
 
@@ -36,6 +32,10 @@ function backup {
 function await {
   local file="$1"
   local timeout="$2"
+
+  if [ -z "$file" ]; then
+    return 1
+  fi
 
   while [ ! -e "$file" ]; do
     sleep 1
