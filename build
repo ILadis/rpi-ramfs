@@ -16,25 +16,17 @@ function getbusybox {
 
 function package {
   ( cd rootfs
-    find . -print0 | cpio --null --create --format=newc | gzip --best
+    find . -print0 | cpio --null --create --format=newc
   ) > "$1"
-}
-
-
-function start {
-  qemu-system-x86_64 -initrd ./initramfs.cpio.gz -kernel /boot/vmlinuz-linux-lts -nographic -curses
 }
 
 function main {
   case "$1" in
   package)
-    package 'initramfs.cpio.gz'
-    ;;
-  launch)
-    termite -e "$0"
+    package 'initramfs.cpio'
     ;;
   *)
-    start
+    echo 'unknown target'
     ;;
   esac
 }
