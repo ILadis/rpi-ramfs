@@ -1,27 +1,35 @@
 
 function main {
-  await "$BACKUP_SOURCE" 10 \
-    || fail 'backup source not available'
+  backup "$BACKUP_SOURCE" "$BACKUP_TARGET" "$BACKUP_FILE"
+}
 
-  await "$BACKUP_TARGET" 10 \
-    || fail 'backup target not available'
+function backup {
+  local source="$1"
+  local target="$2"
+  local file="$3"
+
+  await "$source" 10 \
+    || die 'backup source not available'
+
+  await "$target" 10 \
+    || die 'backup target not available'
 
   mkdir -p /mnt
-  mount "$BACKUP_TARGET" /mnt \
-    || fail 'could not mount target device'
+  mount "$target" /mnt \
+    || die 'could not mount target device'
 
-  if [ -e "/mnt/$BACKUP_FILE.renew" ]; then
-    log "starting backup of $BACKUP_SOURCE to $BACKUP_TARGET ($BACKUP_FILE)"
-    rm -f "/mnt/$BACKUP_FILE.renew"
-    dd if="$BACKUP_SOURCE" of="/mnt/$BACKUP_FILE"
+  if [ -e "/mnt/$file.renew" ]; then
+    echo "starting backup of $source to $target ($file)"
+    rm -f "/mnt/$file.renew"
+    echo if="$source" of="/mnt/$file"
   fi
 
   umount /mnt
 }
 
 function await {
-  file="$1"
-  timeout="$2"
+  local file="$1"
+  local timeout="$2"
 
   while [ ! -e "$file" ]; do
     sleep 1
@@ -32,7 +40,7 @@ function await {
   done
 }
 
-function fail {
-  log "$1"
+function die {
+  echo "$1"
   exit 1
 }

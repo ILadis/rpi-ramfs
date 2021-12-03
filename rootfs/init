@@ -12,9 +12,9 @@ mount -t devtmpfs none /dev
 source /etc/config
 
 # run available tasks
-for task in /run/*.sh; do (
-  source $task && main
-) done
+for task in /run/*.sh; do
+  ( source $task && main ) > log #TODO
+done
 
 # switch root and continue init
 mount /dev/mmcblk0p2 /mnt
