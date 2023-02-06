@@ -1,6 +1,10 @@
 
 This project can be used to build an initramfs image for a Raspberry Pi that can be used to create a full disk backup of the rootfs before booting the actual system.
 
+<!-- Resources and examples:
+   - https://wiki.gentoo.org/wiki/Custom_Initramfs
+   - https://wiki.gentoo.org/wiki/Custom_Initramfs/Examples -->
+
 # Building the initial ram disk
 The following steps are required in order to build the ram disk:
 1. Compile or download a statically linked version of [BusyBox](https://www.busybox.net).
