@@ -35,12 +35,12 @@ To trigger the creation of a backup, create a `.renew` flag file on the backup t
 For example, consider the following configuration setup in `rootfs/etc/config`:
 
 ```sh
-BACKUP_SOURCE=/dev/mmcblk0 # mounted to / (sdcard)
-BACKUP_TARGET=/dev/sda1    # mounted to /mnt (external hdd)
-BACKUP_FILE=rootfs.img
+BACKUP_SOURCE=DEVICE=/dev/mmcblk0                       # mounted to / (sdcard)
+BACKUP_TARGET=UUID=bb57cb7a-94a8-45d2-821a-9daa2f716d9e # mounted to /mnt (UUID of external hdd)
+BACKUP_FILE=backups/rootfs.img
 ```
 
-Then the existence of `/mnt/rootfs.img.renew` would trigger a backup on the next system (re)boot.
+Then the existence of `/mnt/backups/rootfs.img.renew` would trigger a backup on the next system (re)boot.
 
 # Mount backup image
 Once a backup image has been created use `losetup` to create a `loop` device for each partition within the image. Then use `mount` on each partition you want to access.

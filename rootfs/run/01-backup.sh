@@ -1,22 +1,20 @@
 
 function main {
-  local source="$BACKUP_SOURCE"
-  local target="$BACKUP_TARGET"
-  local file="$BACKUP_FILE"
-
-  await "$source" 10 \
-    || die "backup source ($source) not available"
+  local source=''; source=$(fswait "$BACKUP_SOURCE" 10) \
+    || die "backup source ($BACKUP_SOURCE) not available"
 
   echo "backup source $source ready"
 
-  await "$target" 10 \
-    || die "backup target ($target) not available"
+  local target=''; target=$(fswait "$BACKUP_TARGET" 10) \
+    || die "backup target ($BACKUP_TARGET) not available"
 
   echo "backup target $target ready"
 
   mkdir -p /mnt
   mount "$target" /mnt \
     || die 'could not mount target device'
+
+  local file="$BACKUP_FILE"
 
   if [ -e "/mnt/$file.renew" ]; then
     echo "starting backup of $source to $target ($file)"
@@ -29,21 +27,37 @@ function main {
   umount /mnt
 }
 
-function await {
-  local file="$1"
+function fswait {
+  local query="$1"
   local timeout="$2"
 
-  if [ -z "$file" ]; then
+  if [ -z "$query" ]; then
     return 1
   fi
 
-  while [ ! -e "$file" ]; do
+  local value=$(echo "$query" | cut -d'=' -f2)
+  if [ -z "$value" ]; then
+    return 1
+  fi
+
+  while [ $timeout -gt 0 ]; do
+    local device=''
+
+    case "$query" in
+      UUID=*)   device=$(findfs "UUID=$value") ;;
+      DEVICE=*) device=$(test -e "$value" && echo "$value") ;;
+    esac
+
+    if [ -n "$device" ]; then
+      echo "$device"
+      return 0
+    fi
+
     sleep 1
     timeout=$((timeout - 1))
-    if [ $timeout -lt 0 ]; then
-      return 1
-    fi
   done
+
+  return 1
 }
 
 function die {

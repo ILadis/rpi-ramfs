@@ -1,9 +1,9 @@
 
 # source device of backup
-BACKUP_SOURCE=/dev/mmcblk0
+BACKUP_SOURCE=DEVICE=/dev/mmcblk0
 
 # destination device of backup
-BACKUP_TARGET=/dev/sdb2
+BACKUP_TARGET=UUID=bb57cb7a-94a8-45d2-821a-9daa2f716d9e
 
 # name of backup output file
-BACKUP_FILE=rootfs.img
+BACKUP_FILE=backups/rpi-rootfs.img
